@@ -1,0 +1,21 @@
+table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  border: 1px solid black;
+  text-align: left;
+}
+
+.subject-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}

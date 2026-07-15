@@ -1,0 +1,41 @@
+<div class="modal-backdrop">
+  <div class="modal">
+    <h2>{{ task ? 'Edit Task' : 'New Task' }}</h2>
+
+    <form (ngSubmit)="submit()">
+      <label for="subject">Subject</label>
+      <input id="subject" name="subject" [(ngModel)]="model.name" required />
+
+      <label for="dueDate">Due Date</label>
+      <input
+        id="dueDate"
+        name="dueDate"
+        type="date"
+        [(ngModel)]="model.dueDate"
+        required
+      />
+
+      <label for="status">Status</label>
+      <input
+        id="status"
+        name="status"
+        [(ngModel)]="model.statusTypeId"
+        required
+      />
+
+      <label for="userId">User ID</label>
+      <input
+        id="userId"
+        name="userId"
+        type="number"
+        [(ngModel)]="model.userId"
+        required
+      />
+
+      <div class="buttons">
+        <button type="button" (click)="cancel.emit()">Cancel</button>
+        <button type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
