@@ -5,9 +5,14 @@ export interface Task {
   taskId: number;
   name: string;
   dueDate: string;
-  statusTypeId: string;
+  statusName: string;
   userId: number;
   createdBy: string;
+}
+
+export interface StatusType {
+  statusTypeId: string;
+  statusName: string;
 }
 
 export type TaskData = Omit<Task, 'taskId'>;
@@ -20,6 +25,10 @@ export class Tasks {
 
   getTasks() {
     return this.http.get<Task[]>('http://localhost:8080/tasks');
+  }
+
+  getStatuses() {
+    return this.http.get<StatusType[]>('http://localhost:8080/statuses');
   }
 
   createTask(task: TaskData) {

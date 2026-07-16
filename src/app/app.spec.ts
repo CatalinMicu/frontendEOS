@@ -21,7 +21,7 @@ describe('App', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('nav a')).toHaveLength(3);
+    expect(compiled.querySelectorAll('nav a')).toHaveLength(4);
     expect(compiled.textContent).toContain('Tasks');
   });
 });

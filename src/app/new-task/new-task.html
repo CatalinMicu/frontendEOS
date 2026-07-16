@@ -16,12 +16,12 @@
       />
 
       <label for="status">Status</label>
-      <input
-        id="status"
-        name="status"
-        [(ngModel)]="model.statusTypeId"
-        required
-      />
+      <select id="status" name="status" [(ngModel)]="model.statusName" required>
+        <option value="" disabled>Select status</option>
+        @for (status of statuses; track status.statusTypeId) {
+          <option [value]="status.statusName">{{ status.statusName }}</option>
+        }
+      </select>
 
       <label for="userId">User ID</label>
       <input

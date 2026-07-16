@@ -20,7 +20,7 @@
             {{ task.name }}
           </button>
         </td>
-        <td>{{ task.statusTypeId }}</td>
+        <td>{{ task.statusName }}</td>
       </tr>
     }
   </tbody>
@@ -29,6 +29,7 @@
 @if (isModalOpen) {
   <app-new-task
     [task]="selectedTask"
+    [statuses]="statuses"
     (save)="saveTask($event)"
     (cancel)="closeModal()"
   />

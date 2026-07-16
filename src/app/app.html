@@ -1,7 +1,13 @@
-<nav>
-  <a routerLink="/home">Home</a>
-  <a routerLink="/my-tasks">Tasks</a>
-  <a routerLink="/search">Search</a>
+<nav class="navbar">
+  <span class="navbar-title">Task App</span>
+
+  <div class="navbar-links">
+    <a routerLink="/home" routerLinkActive="active">Home</a>
+    <a routerLink="/my-tasks" routerLinkActive="active">My Tasks</a>
+    <a routerLink="/search" routerLinkActive="active">Search</a>
+    <a routerLink="/login" routerLinkActive="active">Login</a>
+    
+  </div>
 </nav>
 
 <router-outlet></router-outlet>

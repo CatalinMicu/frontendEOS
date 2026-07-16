@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { Task, TaskData, Tasks } from '../../services/tasks';
+import { StatusType, Task, TaskData, Tasks } from '../../services/tasks';
 import { NewTask } from '../new-task/new-task';
 
 @Component({
@@ -13,11 +13,13 @@ export class MyTasks implements OnInit {
   private changeDetectorRef = inject(ChangeDetectorRef);
 
   tasks: Task[] = [];
+  statuses: StatusType[] = [];
   selectedTask: Task | null = null;
   isModalOpen = false;
 
   ngOnInit(): void {
     this.loadTasks();
+    this.loadStatuses();
   }
 
   openNewTask(): void {
@@ -49,6 +51,13 @@ export class MyTasks implements OnInit {
   private loadTasks(): void {
     this.tasksService.getTasks().subscribe((res) => {
       this.tasks = res.sort((a, b) => b.dueDate.localeCompare(a.dueDate));
+      this.changeDetectorRef.detectChanges();
+    });
+  }
+
+  private loadStatuses(): void {
+    this.tasksService.getStatuses().subscribe((res) => {
+      this.statuses = res;
       this.changeDetectorRef.detectChanges();
     });
   }
