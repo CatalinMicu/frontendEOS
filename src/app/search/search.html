@@ -1,1 +1,72 @@
-<p>search works!</p>
+<h2>Search Tasks</h2>
+
+<form (ngSubmit)="search()">
+  <div class="filter-row">
+    <input type="checkbox" id="chkAssignedTo" [(ngModel)]="useAssignedTo" name="chkAssignedTo" />
+    <label for="chkAssignedTo">Assigned To</label>
+    @if (useAssignedTo) {
+      <input [(ngModel)]="assignedTo" name="assignedTo" />
+    }
+  </div>
+
+  <div class="filter-row">
+    <input type="checkbox" id="chkSubject" [(ngModel)]="useSubject" name="chkSubject" />
+    <label for="chkSubject">Subject</label>
+    @if (useSubject) {
+      <input [(ngModel)]="subject" name="subject" />
+    }
+  </div>
+
+  <div class="filter-row">
+    <input type="checkbox" id="chkDueDate" [(ngModel)]="useDueDate" name="chkDueDate" />
+    <label for="chkDueDate">Due Date</label>
+    @if (useDueDate) {
+      <input type="date" [(ngModel)]="dueDate" name="dueDate" />
+    }
+  </div>
+
+  <div class="filter-row">
+    <input type="checkbox" id="chkStatus" [(ngModel)]="useStatus" name="chkStatus" />
+    <label for="chkStatus">Status</label>
+    @if (useStatus) {
+      <select [(ngModel)]="status" name="status">
+        <option value="">Any</option>
+        @for (s of statuses; track s.statusTypeId) {
+          <option [value]="s.statusName">{{ s.statusName }}</option>
+        }
+      </select>
+    }
+  </div>
+
+  <div class="buttons">
+    <button type="submit">Search</button>
+    <button type="button" (click)="clear()">Clear</button>
+  </div>
+</form>
+
+@if (searched) {
+  @if (tasks.length > 0) {
+    <table>
+      <thead>
+        <tr>
+          <th>Assigned To</th>
+          <th>Subject</th>
+          <th>Due Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (task of tasks; track task.taskId) {
+          <tr>
+            <td>{{ task.createdBy }}</td>
+            <td>{{ task.name }}</td>
+            <td>{{ task.dueDate }}</td>
+            <td>{{ task.statusName }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p>No tasks found.</p>
+  }
+}

@@ -1,11 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {
-  AuthService,
-  LoginData,
-  RegisterData,
-} from '../../services/auth-service';
+import { AuthService, LoginData, RegisterData } from '../../services/auth-service';
 
 @Component({
   selector: 'app-login-component',
@@ -13,24 +9,21 @@ import {
   templateUrl: './login-component.html',
   styleUrl: './login-component.css',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
   isRegisterMode = false;
   errorMessage = '';
 
-  loginData: LoginData = {
-    email: '',
-    password: '',
-  };
+  loginData: LoginData = { email: '', password: '' };
+  registerData: RegisterData = { username: '', birthDate: '', email: '', password: '' };
 
-  registerData: RegisterData = {
-    username: '',
-    birthDate: '',
-    email: '',
-    password: '',
-  };
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn) {
+      this.router.navigate(['/my-tasks']);
+    }
+  }
 
   showRegisterForm(): void {
     this.isRegisterMode = true;
@@ -44,15 +37,12 @@ export class LoginComponent {
 
   register(): void {
     this.errorMessage = '';
-
     this.authService.registerAndLogin(this.registerData).subscribe({
       next: (response) => {
         if (!response.user) {
           this.errorMessage = response.response;
           return;
         }
-
-        localStorage.setItem('user', JSON.stringify(response.user));
         this.router.navigate(['/home']);
       },
       error: () => {
@@ -63,15 +53,12 @@ export class LoginComponent {
 
   authenticate(): void {
     this.errorMessage = '';
-
     this.authService.login(this.loginData).subscribe({
       next: (response) => {
         if (!response.user) {
           this.errorMessage = response.response;
           return;
         }
-
-        localStorage.setItem('user', JSON.stringify(response.user));
         this.router.navigate(['/home']);
       },
       error: () => {

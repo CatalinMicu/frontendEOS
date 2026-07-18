@@ -26,3 +26,20 @@
 .navbar-links a.active {
   text-decoration: underline;
 }
+
+.navbar-user {
+  color: #8cf;
+  font-weight: bold;
+}
+
+.logout-btn {
+  padding: 2px 8px;
+  background: #c44;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #e55;
+}

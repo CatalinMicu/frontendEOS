@@ -1,0 +1,53 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-row label {
+  font-weight: bold;
+  min-width: 100px;
+}
+
+.filter-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.filter-row input[type="text"],
+.filter-row input[type="date"],
+.filter-row select {
+  flex: 1;
+  padding: 4px;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.buttons button {
+  padding: 4px 12px;
+}
+
+table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px;
+  border: 1px solid black;
+  text-align: left;
+}
