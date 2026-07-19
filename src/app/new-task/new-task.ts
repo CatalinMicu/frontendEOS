@@ -24,8 +24,11 @@ export class NewTask implements OnInit {
 
   ngOnInit(): void {
     if (this.task) {
-      const { taskId, ...taskData } = this.task;
-      this.model = { ...taskData };
+      this.model.name = this.task.name;
+      this.model.dueDate = this.task.dueDate;
+      this.model.statusName = this.task.statusName;
+      this.model.userId = this.task.userId;
+      this.model.createdBy = this.task.createdBy;
     } else if (this.statuses.length > 0) {
       this.model.statusName = this.statuses[0].statusName;
     }

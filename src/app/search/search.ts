@@ -14,6 +14,7 @@ export class Search implements OnInit {
   tasks: Task[] = [];
   statuses: StatusType[] = [];
   searched = false;
+  loading = false;
 
   useAssignedTo = false;
   useSubject = false;
@@ -37,10 +38,14 @@ export class Search implements OnInit {
     if (this.useSubject && this.subject) params.subject = this.subject;
     if (this.useDueDate && this.dueDate) params.dueDate = this.dueDate;
     if (this.useStatus && this.status) params.status = this.status;
+    this.tasks = [];
+    this.loading = true;
+    this.searched = false;
 
     this.tasksService.searchTasks(params).subscribe((res) => {
       this.tasks = res;
       this.searched = true;
+      this.loading = false;
     });
   }
 
@@ -55,5 +60,6 @@ export class Search implements OnInit {
     this.status = '';
     this.tasks = [];
     this.searched = false;
+    this.loading = false;
   }
 }
