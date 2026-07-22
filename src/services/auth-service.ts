@@ -53,7 +53,7 @@ export class AuthService {
   register(data: RegisterData) {
     const encoded = {
       username: data.username,
-      birthdate: data.birthDate,
+      birthDate: data.birthDate,
       email: btoa(data.email),
       password: btoa(data.password),
     };
