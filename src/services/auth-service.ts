@@ -22,8 +22,7 @@ export interface UserResponse {
 }
 
 export interface AuthResponse {
-  user: UserResponse | null;
-  response: string;
+  token: string;
 }
 
 @Injectable({
@@ -36,12 +35,13 @@ export class AuthService {
   currentUser = signal<UserResponse | null>(null);
 
   constructor() {
-    const raw = localStorage.getItem('user');
+    const raw = localStorage.getItem('token');
     if (raw) {
       try {
-        this.currentUser.set(JSON.parse(raw));
+      const user = JSON.parse(atob(raw.split('.')[1])) as UserResponse;
+      this.currentUser.set(user);
       } catch {
-        localStorage.removeItem('user');
+        localStorage.removeItem('token');
       }
     }
   }
@@ -51,15 +51,27 @@ export class AuthService {
   }
 
   register(data: RegisterData) {
-    return this.http.post<UserResponse>('http://localhost:8080/users', data);
+    const encoded = {
+      username: data.username,
+      birthdate: data.birthDate,
+      email: btoa(data.email),
+      password: btoa(data.password),
+    };
+    return this.http.post('http://localhost:8080/register', encoded, {responseType: 'text'});
   }
+  
 
   login(data: LoginData) {
-    return this.http.post<AuthResponse>('http://localhost:8080/users/login', data).pipe(
-      tap((res) => {
-        if (res.user) {
-          localStorage.setItem('user', JSON.stringify(res.user));
-          this.currentUser.set(res.user);
+    const encoded = {
+      email: btoa(data.email),
+      password: btoa(data.password),
+    };
+    return this.http.post('http://localhost:8080/login', encoded, { responseType: 'text' }).pipe(
+      tap((token) => {
+        if (token) {
+          localStorage.setItem('token', token);
+          const user = JSON.parse(atob(token.split('.')[1])) as UserResponse;
+          this.currentUser.set(user);
         }
       }),
     );
@@ -72,7 +84,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     this.currentUser.set(null);
     this.router.navigate(['/login']);
   }

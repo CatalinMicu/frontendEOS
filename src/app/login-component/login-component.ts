@@ -38,9 +38,9 @@ export class LoginComponent implements OnInit {
   register(): void {
     this.errorMessage = '';
     this.authService.registerAndLogin(this.registerData).subscribe({
-      next: (response) => {
-        if (!response.user) {
-          this.errorMessage = response.response;
+      next: (token) => {
+        if (!token) {
+          this.errorMessage = "Invalid credentials.";
           return;
         }
         this.router.navigate(['/home']);
@@ -54,9 +54,9 @@ export class LoginComponent implements OnInit {
   authenticate(): void {
     this.errorMessage = '';
     this.authService.login(this.loginData).subscribe({
-      next: (response) => {
-        if (!response.user) {
-          this.errorMessage = response.response;
+      next: (token) => {
+        if (!token) {
+          this.errorMessage = "Invalid credentials.";
           return;
         }
         this.router.navigate(['/home']);
