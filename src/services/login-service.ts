@@ -25,17 +25,14 @@ export class LoginService {
   currentUser = signal<LoggedInUser | null>(null);
 
   constructor() {
-    if (LocalStorageUtils.getItem(LocalStorageUtils.tokenKey)) {
+    const token = LocalStorageUtils.getItem(LocalStorageUtils.tokenKey);
+
+    if (token) {
       try {
-        this.currentUser.set(
-          JSON.parse(
-            atob(
-              LocalStorageUtils.getItem(LocalStorageUtils.tokenKey)!.split(
-                '.',
-              )[1],
-            ),
-          ) as LoggedInUser,
-        );
+        const payload = token.split('.')[1];
+        const user = JSON.parse(atob(payload)) as LoggedInUser;
+
+        this.currentUser.set(user);
       } catch {
         LocalStorageUtils.deleteItem(LocalStorageUtils.tokenKey);
       }
@@ -63,9 +60,11 @@ export class LoginService {
 
   saveToken(response: string): void {
     LocalStorageUtils.setItem(LocalStorageUtils.tokenKey, response);
-    this.currentUser.set(
-      JSON.parse(atob(response.split('.')[1])) as LoggedInUser,
-    );
+
+    const payload = response.split('.')[1];
+    const user = JSON.parse(atob(payload)) as LoggedInUser;
+
+    this.currentUser.set(user);
   }
 
   logout(): void {

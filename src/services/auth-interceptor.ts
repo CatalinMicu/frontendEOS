@@ -7,14 +7,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  if (!LocalStorageUtils.getItem(LocalStorageUtils.tokenKey)) {
+  const token = LocalStorageUtils.getItem(LocalStorageUtils.tokenKey);
+
+  if (!token) {
     return next(req);
   }
 
   return next(
     req.clone({
       setHeaders: {
-        Authorization: `Bearer ${LocalStorageUtils.getItem(LocalStorageUtils.tokenKey)}`,
+        Authorization: `Bearer ${token}`,
       },
     }),
   ).pipe(
