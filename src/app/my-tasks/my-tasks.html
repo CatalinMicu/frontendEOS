@@ -1,35 +1,73 @@
-<h2>My Tasks</h2>
+<main class="tasks-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">YOUR WORK</p>
+      <h1>My Tasks</h1>
+    </div>
+    <div class="header-actions">
+      <div class="task-switch">
+        <button
+          type="button"
+          [class.active]="!showAllTasks"
+          (click)="showMyTasks()"
+        >
+          My tasks
+        </button>
+        <button
+          type="button"
+          [class.active]="showAllTasks"
+          (click)="showEveryTask()"
+        >
+          All tasks
+        </button>
+      </div>
 
-<button type="button" (click)="openNewTask()">New task</button>
+      <button class="primary-button" type="button" (click)="openNewTask()">
+        New task
+      </button>
+    </div>
+  </header>
 
-<table>
-  <thead>
-    <tr>
-      <th>Due Date</th>
-      <th>Subject</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-
-  <tbody>
+  <div class="task-grid">
     @for (task of tasks; track task.taskId) {
-      <tr>
-        <td>{{ task.dueDate }}</td>
-        <td>
-          <button class="subject-button" type="button" (click)="openEditTask(task)">
-            {{ task.name }}
+      <article class="task-card">
+        <div class="task-card-top">
+          <span class="status">{{ task.statusName }}</span>
+          <span class="date">{{ task.dueDate }}</span>
+        </div>
+
+        <h2>{{ task.name }}</h2>
+        <p class="assigned-user">Assigned to: {{ task.assignedTo }}</p>
+
+        <div class="card-actions">
+          <button
+            class="edit-button"
+            type="button"
+            (click)="openEditTask(task)"
+          >
+            Edit
           </button>
-        </td>
-        <td>{{ task.statusName }}</td>
-      </tr>
+
+          <button
+            class="delete-button"
+            type="button"
+            (click)="deleteTask(task.taskId)"
+          >
+            Delete
+          </button>
+        </div>
+      </article>
+    } @empty {
+      <p class="empty-message">You do not have any tasks yet.</p>
     }
-  </tbody>
-</table>
+  </div>
+</main>
 
 @if (isModalOpen) {
   <app-new-task
     [task]="selectedTask"
     [statuses]="statuses"
+    [users]="users"
     (save)="saveTask($event)"
     (cancel)="closeModal()"
   />

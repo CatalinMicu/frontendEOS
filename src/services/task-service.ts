@@ -7,6 +7,7 @@ export interface Task {
   dueDate: string;
   statusName: string;
   userId: number;
+  assignedTo: string;
   createdBy: string;
 }
 
@@ -18,6 +19,7 @@ export interface SearchParams {
 }
 
 export interface TaskData {
+  taskId: number | null;
   name: string;
   dueDate: string;
   statusName: string;
@@ -53,6 +55,12 @@ export class TaskService {
       userId: task.userId,
       createdBy: task.createdBy,
     });
+  }
+
+  deleteTask(taskId: number) {
+    return this.http.delete<void>(
+      `http://localhost:8080/tasks/${taskId}`,
+    );
   }
 
   searchTasks(params: SearchParams) {

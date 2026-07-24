@@ -1,7 +1,6 @@
 import {
   Component,
   EventEmitter,
-  inject,
   Input,
   OnInit,
   Output,
@@ -9,7 +8,7 @@ import {
 import { FormsModule } from '@angular/forms';
 import { StatusType } from '../../services/status-service';
 import { Task, TaskData } from '../../services/task-service';
-import { LoginService } from '../../services/login-service';
+import { User } from '../../services/user-service';
 
 @Component({
   selector: 'app-new-task',
@@ -18,23 +17,24 @@ import { LoginService } from '../../services/login-service';
   styleUrl: './new-task.css',
 })
 export class NewTask implements OnInit {
-  private loginService = inject(LoginService);
-
   @Input() task: Task | null = null;
   @Input() statuses: StatusType[] = [];
+  @Input() users: User[] = [];
   @Output() save = new EventEmitter<TaskData>();
   @Output() cancel = new EventEmitter<void>();
 
   model: TaskData = {
+    taskId: null,
     name: '',
     dueDate: '',
     statusName: '',
-    userId: this.loginService.currentUser()?.userId ?? 0,
+    userId: 0,
     createdBy: 'frontend',
   };
 
   ngOnInit(): void {
     if (this.task) {
+      this.model.taskId = this.task.taskId;
       this.model.name = this.task.name;
       this.model.dueDate = this.task.dueDate;
       this.model.statusName = this.task.statusName;
@@ -47,6 +47,7 @@ export class NewTask implements OnInit {
 
   submit(): void {
     this.save.emit({
+      taskId: this.model.taskId,
       name: this.model.name,
       dueDate: this.model.dueDate,
       statusName: this.model.statusName,

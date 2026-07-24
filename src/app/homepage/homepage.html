@@ -1,2 +1,11 @@
-<h2>Welcome, {{ loginService.currentUser()?.username }}!</h2>
-<p>Use the navigation bar to manage your tasks.</p>
+<main class="home-page">
+  <p class="eyebrow">TASK APP</p>
+
+  @if (loginService.isLoggedIn) {
+    <h1>Welcome, {{ loginService.currentUser()?.username }}!</h1>
+  } @else {
+    <h1>Welcome, Guest!</h1>
+  }
+
+  <p>Use the navigation bar to manage and search your tasks.</p>
+</main>

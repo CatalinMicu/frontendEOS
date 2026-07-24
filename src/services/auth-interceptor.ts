@@ -1,4 +1,5 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
 import { LocalStorageUtils } from '../utils/local-storage-utils';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
@@ -15,6 +16,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       setHeaders: {
         Authorization: `Bearer ${LocalStorageUtils.getItem(LocalStorageUtils.tokenKey)}`,
       },
+    }),
+  ).pipe(
+    catchError((error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        LocalStorageUtils.deleteItem(LocalStorageUtils.tokenKey);
+        window.location.href = '/login';
+      }
+
+      return throwError(() => error);
     }),
   );
 };

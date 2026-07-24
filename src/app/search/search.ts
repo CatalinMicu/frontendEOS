@@ -1,4 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StatusService, StatusType } from '../../services/status-service';
 import { SearchParams, Task, TaskService } from '../../services/task-service';
@@ -12,16 +17,12 @@ import { SearchParams, Task, TaskService } from '../../services/task-service';
 export class Search implements OnInit {
   private taskService = inject(TaskService);
   private statusService = inject(StatusService);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   tasks: Task[] = [];
   statuses: StatusType[] = [];
   searched = false;
   loading = false;
-
-  useAssignedTo = false;
-  useSubject = false;
-  useDueDate = false;
-  useStatus = false;
 
   assignedTo = '';
   subject = '';
@@ -31,15 +32,16 @@ export class Search implements OnInit {
   ngOnInit(): void {
     this.statusService.getStatuses().subscribe((res) => {
       this.statuses = res;
+      this.changeDetectorRef.detectChanges();
     });
   }
 
   search(): void {
     const params: SearchParams = {};
-    if (this.useAssignedTo && this.assignedTo) params.assignedTo = this.assignedTo;
-    if (this.useSubject && this.subject) params.subject = this.subject;
-    if (this.useDueDate && this.dueDate) params.dueDate = this.dueDate;
-    if (this.useStatus && this.status) params.status = this.status;
+    if (this.assignedTo) params.assignedTo = this.assignedTo;
+    if (this.subject) params.subject = this.subject;
+    if (this.dueDate) params.dueDate = this.dueDate;
+    if (this.status) params.status = this.status;
     this.loading = true;
 
     this.taskService.searchTasks(params).subscribe({
@@ -47,18 +49,16 @@ export class Search implements OnInit {
         this.tasks = res;
         this.searched = true;
         this.loading = false;
+        this.changeDetectorRef.detectChanges();
       },
       error: () => {
         this.loading = false;
+        this.changeDetectorRef.detectChanges();
       },
     });
   }
 
   clear(): void {
-    this.useAssignedTo = false;
-    this.useSubject = false;
-    this.useDueDate = false;
-    this.useStatus = false;
     this.assignedTo = '';
     this.subject = '';
     this.dueDate = '';

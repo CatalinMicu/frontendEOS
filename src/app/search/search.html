@@ -1,75 +1,80 @@
-<h2>Search Tasks</h2>
+<main class="search-page">
+  <header class="page-header">
+    <p class="eyebrow">FIND YOUR WORK</p>
+    <h1>Search Tasks</h1>
+  </header>
 
-<form (ngSubmit)="search()">
-  <div class="filter-row">
-    <input type="checkbox" id="chkAssignedTo" [(ngModel)]="useAssignedTo" name="chkAssignedTo" />
-    <label for="chkAssignedTo">Assigned To</label>
-    @if (useAssignedTo) {
-      <input [(ngModel)]="assignedTo" name="assignedTo" />
-    }
-  </div>
+  <form class="search-panel" (ngSubmit)="search()">
+    <div class="search-bar">
+      <label for="subject">Search by subject</label>
+      <input
+        id="subject"
+        [(ngModel)]="subject"
+        name="subject"
+        placeholder="Enter a task subject"
+      />
+    </div>
 
-  <div class="filter-row">
-    <input type="checkbox" id="chkSubject" [(ngModel)]="useSubject" name="chkSubject" />
-    <label for="chkSubject">Subject</label>
-    @if (useSubject) {
-      <input [(ngModel)]="subject" name="subject" />
-    }
-  </div>
+    <div class="filters">
+      <div class="filter">
+        <label for="assignedTo">Assigned To</label>
+        <input
+          id="assignedTo"
+          [(ngModel)]="assignedTo"
+          name="assignedTo"
+          placeholder="Name"
+        />
+      </div>
 
-  <div class="filter-row">
-    <input type="checkbox" id="chkDueDate" [(ngModel)]="useDueDate" name="chkDueDate" />
-    <label for="chkDueDate">Due Date</label>
-    @if (useDueDate) {
-      <input type="date" [(ngModel)]="dueDate" name="dueDate" />
-    }
-  </div>
+      <div class="filter">
+        <label for="dueDate">Due Date</label>
+        <input
+          id="dueDate"
+          type="date"
+          [(ngModel)]="dueDate"
+          name="dueDate"
+        />
+      </div>
 
-  <div class="filter-row">
-    <input type="checkbox" id="chkStatus" [(ngModel)]="useStatus" name="chkStatus" />
-    <label for="chkStatus">Status</label>
-    @if (useStatus) {
-      <select [(ngModel)]="status" name="status">
-        <option value="">Any</option>
-        @for (s of statuses; track s.statusTypeId) {
-          <option [value]="s.statusName">{{ s.statusName }}</option>
-        }
-      </select>
-    }
-  </div>
+      <div class="filter">
+        <label for="status">Status</label>
+        <select id="status" [(ngModel)]="status" name="status">
+          <option value="">Any status</option>
+          @for (statusType of statuses; track statusType.statusTypeId) {
+            <option [value]="statusType.statusName">
+              {{ statusType.statusName }}
+            </option>
+          }
+        </select>
+      </div>
+    </div>
 
-  <div class="buttons">
-    <button type="submit">Search</button>
+    <div class="buttons">
+      <button class="search-button" type="submit">Search</button>
+      <button class="clear-button" type="button" (click)="clear()">Clear</button>
+    </div>
+
     @if (loading) {
-      <span>Loading</span>
+      <p class="loading">Loading</p>
     }
-    <button type="button" (click)="clear()">Clear</button>
-  </div>
-</form>
+  </form>
 
-@if (searched) {
-  @if (tasks.length > 0) {
-    <table>
-      <thead>
-        <tr>
-          <th>Assigned To</th>
-          <th>Subject</th>
-          <th>Due Date</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
+  @if (searched) {
+    @if (tasks.length > 0) {
+      <section class="results">
         @for (task of tasks; track task.taskId) {
-          <tr>
-            <td>{{ task.createdBy }}</td>
-            <td>{{ task.name }}</td>
-            <td>{{ task.dueDate }}</td>
-            <td>{{ task.statusName }}</td>
-          </tr>
+          <article class="task-card">
+            <div class="task-card-top">
+              <span class="status">{{ task.statusName }}</span>
+              <span class="date">{{ task.dueDate }}</span>
+            </div>
+            <h2>{{ task.name }}</h2>
+            <p>Assigned to: {{ task.assignedTo }}</p>
+          </article>
         }
-      </tbody>
-    </table>
-  } @else {
-    <p>No tasks found.</p>
+      </section>
+    } @else {
+      <p class="empty-message">No tasks found.</p>
+    }
   }
-}
+</main>
