@@ -1,4 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginData, LoginService } from '../../services/login-service';
@@ -17,6 +23,7 @@ export class LoginComponent implements OnInit {
   private loginService = inject(LoginService);
   private registerService = inject(RegisterService);
   private router = inject(Router);
+  private changeDetectorRef = inject(ChangeDetectorRef);
 
   isRegisterMode = false;
   errorMessage = '';
@@ -48,8 +55,14 @@ export class LoginComponent implements OnInit {
         this.loginService.saveToken(response);
         this.router.navigate(['/home']);
       },
-      error: () => {
-        this.errorMessage = 'Register failed.';
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 409) {
+          this.errorMessage = error.error;
+        } else {
+          this.errorMessage = 'Register failed.';
+        }
+
+        this.changeDetectorRef.detectChanges();
       },
     });
   }
