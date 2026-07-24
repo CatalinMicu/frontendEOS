@@ -10,11 +10,6 @@ export interface Task {
   createdBy: string;
 }
 
-export interface StatusType {
-  statusTypeId: string;
-  statusName: string;
-}
-
 export interface SearchParams {
   assignedTo?: string;
   subject?: string;
@@ -22,35 +17,47 @@ export interface SearchParams {
   status?: string;
 }
 
-export type TaskData = Omit<Task, 'taskId'>;
+export interface TaskData {
+  name: string;
+  dueDate: string;
+  statusName: string;
+  userId: number;
+  createdBy: string;
+}
 
 @Injectable({
   providedIn: 'root',
 })
-export class Tasks {
+export class TaskService {
   private http = inject(HttpClient);
 
   getTasks() {
     return this.http.get<Task[]>('http://localhost:8080/tasks');
   }
 
-  getStatuses() {
-    return this.http.get<StatusType[]>('http://localhost:8080/statuses');
-  }
-
   createTask(task: TaskData) {
-    return this.http.post<Task>('http://localhost:8080/tasks', task);
+    return this.http.post<Task>('http://localhost:8080/tasks', {
+      name: task.name,
+      dueDate: task.dueDate,
+      statusName: task.statusName,
+      userId: task.userId,
+      createdBy: task.createdBy,
+    });
   }
 
   updateTask(taskId: number, task: TaskData) {
-    return this.http.put<Task>(
-      `http://localhost:8080/tasks/${taskId}`,
-      task,
-    );
+    return this.http.put<Task>(`http://localhost:8080/tasks/${taskId}`, {
+      name: task.name,
+      dueDate: task.dueDate,
+      statusName: task.statusName,
+      userId: task.userId,
+      createdBy: task.createdBy,
+    });
   }
 
   searchTasks(params: SearchParams) {
     let httpParams = new HttpParams();
+
     if (params.assignedTo) {
       httpParams = httpParams.set('assignedTo', params.assignedTo);
     }
@@ -63,6 +70,7 @@ export class Tasks {
     if (params.status) {
       httpParams = httpParams.set('status', params.status);
     }
+
     return this.http.get<Task[]>('http://localhost:8080/tasks/search', {
       params: httpParams,
     });

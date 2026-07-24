@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import { AuthService } from '../../services/auth-service';
-import { inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { LoginService } from '../../services/login-service';
 
 @Component({
   selector: 'app-homepage',
@@ -9,5 +8,5 @@ import { inject } from '@angular/core';
   styleUrl: './homepage.css',
 })
 export class Homepage {
-  public authService = inject(AuthService);
+  loginService = inject(LoginService);
 }

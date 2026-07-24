@@ -1,6 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { StatusType, Task, TaskData } from '../../services/tasks';
+import { StatusType } from '../../services/status-service';
+import { Task, TaskData } from '../../services/task-service';
+import { LoginService } from '../../services/login-service';
 
 @Component({
   selector: 'app-new-task',
@@ -9,6 +18,8 @@ import { StatusType, Task, TaskData } from '../../services/tasks';
   styleUrl: './new-task.css',
 })
 export class NewTask implements OnInit {
+  private loginService = inject(LoginService);
+
   @Input() task: Task | null = null;
   @Input() statuses: StatusType[] = [];
   @Output() save = new EventEmitter<TaskData>();
@@ -18,7 +29,7 @@ export class NewTask implements OnInit {
     name: '',
     dueDate: '',
     statusName: '',
-    userId: 2,
+    userId: this.loginService.currentUser()?.userId ?? 0,
     createdBy: 'frontend',
   };
 
@@ -35,6 +46,12 @@ export class NewTask implements OnInit {
   }
 
   submit(): void {
-    this.save.emit({ ...this.model });
+    this.save.emit({
+      name: this.model.name,
+      dueDate: this.model.dueDate,
+      statusName: this.model.statusName,
+      userId: this.model.userId,
+      createdBy: this.model.createdBy,
+    });
   }
 }

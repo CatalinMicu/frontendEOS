@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SearchParams, StatusType, Task, Tasks } from '../../services/tasks';
+import { StatusService, StatusType } from '../../services/status-service';
+import { SearchParams, Task, TaskService } from '../../services/task-service';
 
 @Component({
   selector: 'app-search',
@@ -9,7 +10,8 @@ import { SearchParams, StatusType, Task, Tasks } from '../../services/tasks';
   styleUrl: './search.css',
 })
 export class Search implements OnInit {
-  private tasksService = inject(Tasks);
+  private taskService = inject(TaskService);
+  private statusService = inject(StatusService);
 
   tasks: Task[] = [];
   statuses: StatusType[] = [];
@@ -27,7 +29,7 @@ export class Search implements OnInit {
   status = '';
 
   ngOnInit(): void {
-    this.tasksService.getStatuses().subscribe((res) => {
+    this.statusService.getStatuses().subscribe((res) => {
       this.statuses = res;
     });
   }
@@ -40,7 +42,7 @@ export class Search implements OnInit {
     if (this.useStatus && this.status) params.status = this.status;
     this.loading = true;
 
-    this.tasksService.searchTasks(params).subscribe({
+    this.taskService.searchTasks(params).subscribe({
       next: (res) => {
         this.tasks = res;
         this.searched = true;

@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
-import { StatusType, Task, TaskData, Tasks } from '../../services/tasks';
+import { StatusService, StatusType } from '../../services/status-service';
+import { Task, TaskData, TaskService } from '../../services/task-service';
 import { NewTask } from '../new-task/new-task';
 
 @Component({
@@ -9,7 +10,8 @@ import { NewTask } from '../new-task/new-task';
   styleUrl: './my-tasks.css',
 })
 export class MyTasks implements OnInit {
-  private tasksService = inject(Tasks);
+  private taskService = inject(TaskService);
+  private statusService = inject(StatusService);
   private changeDetectorRef = inject(ChangeDetectorRef);
 
   tasks: Task[] = [];
@@ -38,25 +40,31 @@ export class MyTasks implements OnInit {
   }
 
   saveTask(taskData: TaskData): void {
-    const request = this.selectedTask
-      ? this.tasksService.updateTask(this.selectedTask.taskId, taskData)
-      : this.tasksService.createTask(taskData);
+    if (this.selectedTask) {
+      this.taskService
+        .updateTask(this.selectedTask.taskId, taskData)
+        .subscribe(() => {
+          this.closeModal();
+          this.loadTasks();
+        });
+      return;
+    }
 
-    request.subscribe(() => {
+    this.taskService.createTask(taskData).subscribe(() => {
       this.closeModal();
       this.loadTasks();
     });
   }
 
   private loadTasks(): void {
-    this.tasksService.getTasks().subscribe((res) => {
+    this.taskService.getTasks().subscribe((res) => {
       this.tasks = res.sort((a, b) => b.dueDate.localeCompare(a.dueDate));
       this.changeDetectorRef.detectChanges();
     });
   }
 
   private loadStatuses(): void {
-    this.tasksService.getStatuses().subscribe((res) => {
+    this.statusService.getStatuses().subscribe((res) => {
       this.statuses = res;
       this.changeDetectorRef.detectChanges();
     });
